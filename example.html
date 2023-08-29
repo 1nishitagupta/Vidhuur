@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nested Rule and Condition Elements</title>
+  </head>
+  <body>
+    <button id="add-group">Add Group</button>
+    <div id="container"></div>
+
+    <script>
+      function addRule(ruleDiv) {
+        const ruleBox = document.createElement("div");
+        ruleBox.classList.add("rule-box");
+
+        const ruleHeadingDiv = document.createElement("div");
+        ruleHeadingDiv.classList.add("rule-heading");
+        ruleHeadingDiv.textContent = "Rule Heading";
+
+        const addRuleButton = createButton("Add Rule", () => addRule(ruleBox));
+        const addConditionButton = createButton("Add Condition", () =>
+          addCondition(ruleBox)
+        );
+
+        const removeRuleButton = createButton("Remove Rule", () =>
+          ruleDiv.removeChild(ruleBox)
+        );
+
+        const conditionsPlaceholder = document.createElement("div");
+        conditionsPlaceholder.classList.add("conditions-placeholder");
+
+        ruleBox.appendChild(ruleHeadingDiv);
+        ruleBox.appendChild(addRuleButton);
+        ruleBox.appendChild(addConditionButton);
+        ruleBox.appendChild(removeRuleButton);
+        ruleBox.appendChild(conditionsPlaceholder);
+
+        ruleDiv.appendChild(ruleBox);
+      }
+
+      function addCondition(ruleDiv) {
+        const conditionDiv = document.createElement("div");
+        conditionDiv.classList.add("condition");
+        conditionDiv.textContent = "Condition Text";
+
+        ruleDiv
+          .querySelector(".conditions-placeholder")
+          .appendChild(conditionDiv);
+      }
+
+      function createButton(text, onClick) {
+        const button = document.createElement("button");
+        button.textContent = text;
+        button.addEventListener("click", onClick);
+        return button;
+      }
+
+      const container = document.getElementById("container");
+      const addGroupButton = document.getElementById("add-group");
+
+      addGroupButton.addEventListener("click", () => {
+        const groupDiv = document.createElement("div");
+        groupDiv.classList.add("group");
+
+        const addRuleButton = createButton("Add Rule", () => addRule(groupDiv));
+        const addConditionButton = createButton("Add Condition", () =>
+          addCondition(groupDiv)
+        );
+
+        groupDiv.appendChild(addRuleButton);
+        groupDiv.appendChild(addConditionButton);
+
+        container.appendChild(groupDiv);
+      });
+    </script>
+  </body>
+</html>
