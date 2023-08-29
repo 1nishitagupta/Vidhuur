@@ -532,5 +532,5 @@ addGroupButton.addEventListener("click", () => {
   // groupDiv.appendChild(addConditionButton);
 
   container.appendChild(groupDiv);
-  // groupDiv.appendChild(addRule(groupDiv));
+  container.appendChild(addRule(groupDiv));
 });
