@@ -474,7 +474,7 @@ function addRule(ruleDiv) {
   addRuleDiv.appendChild(addConditionDiv);
 
   // Append the final constructed structure to the document body
-  document.body.appendChild(addRuleDiv);
+  // document.body.appendChild(addRuleDiv);
 
   ruleBox.appendChild(ruleMainDiv);
 
@@ -508,6 +508,7 @@ const addGroupButton = document.getElementById("add-group-btn");
 addGroupButton.addEventListener("click", () => {
   const groupDiv = document.createElement("div");
   groupDiv.classList.add("group");
+
   groupDiv.innerHTML = `<div id="addGroup">
     <div class="bg-light rounded-3 overflow-hidden mb-3">
       <div class="group p-3 bg-light">
@@ -522,7 +523,7 @@ addGroupButton.addEventListener("click", () => {
     </div>
   </div>`;
 
-  const group = document.getElementById("group");
+  const group = document.getElementsByClassName("addGroup");
 
   // const addRuleButton = createButton("Add Rule", () => addRule(groupDiv));
   // const addConditionButton = createButton("Add Condition", () =>
@@ -532,5 +533,10 @@ addGroupButton.addEventListener("click", () => {
   // groupDiv.appendChild(addConditionButton);
 
   container.appendChild(groupDiv);
-  container.appendChild(addRule(groupDiv));
+  // group.appendChild(addRule(groupDiv));
+  const ruleDivv = document.createElement("div");
+  ruleDivv.classList.add("rule");
+  const rule = addRule(groupDiv);
+  ruleDivv.appendChild(rule);
+  console.log(groupDiv);
 });
