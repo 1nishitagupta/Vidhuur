@@ -1,122 +1,6 @@
-document.addEventListener("DOMContentLoaded", function () {
-  let ruleCounter = 0;
-
-  function addCondition(button) {
-    button.preventDefault();
-    const conditionDiv = document.createElement("div");
-    conditionDiv.classList.add(
-      "d-flex",
-      "justify-content-between",
-      "align-items-center"
-    );
-
-    const conditionSelects = [];
-    for (let i = 0; i < 3; i++) {
-      const select = document.createElement("select");
-      select.classList.add("selectpicker");
-      select.name = "conditionSelect";
-      const optionAdd = document.createElement("option");
-      optionAdd.value = "";
-      optionAdd.textContent = "ADD";
-      const optionInclude = document.createElement("option");
-      optionInclude.value = "include";
-      optionInclude.textContent = "Include";
-      const optionExclude = document.createElement("option");
-      optionExclude.value = "exclude";
-      optionExclude.textContent = "Exclude";
-
-      select.appendChild(optionAdd);
-      select.appendChild(optionInclude);
-      select.appendChild(optionExclude);
-
-      conditionSelects.push(select);
-    }
-
-    const trashIcon = document.createElement("i");
-    trashIcon.classList.add("fa-solid", "fa-trash", "text-purple");
-
-    conditionDiv.appendChild(conditionSelects[0]);
-    conditionDiv.appendChild(conditionSelects[1]);
-    conditionDiv.appendChild(conditionSelects[2]);
-    conditionDiv.appendChild(trashIcon);
-
-    ruleDiv.appendChild(conditionDiv);
-  }
-
-  function addRule(button) {
-    button.preventDefault();
-    ruleCounter++;
-
-    const newRuleDiv = document.createElement("div");
-    newRuleDiv.classList.add(
-      "d-flex",
-      "justify-content-between",
-      "p-2",
-      "border-m",
-      "rule",
-      "bg-light"
-    );
-
-    const conditionDiv = document.createElement("div");
-    conditionDiv.classList.add("d-flex", "gap-3", "py-3");
-
-    const conditionSelects = [];
-    for (let i = 0; i < 3; i++) {
-      const select = document.createElement("select");
-      select.classList.add("selectpicker");
-      select.name = "conditionSelect";
-      const optionAdd = document.createElement("option");
-      optionAdd.value = "";
-      optionAdd.textContent = "ADD";
-      const optionInclude = document.createElement("option");
-      optionInclude.value = "include";
-      optionInclude.textContent = "Include";
-      const optionExclude = document.createElement("option");
-      optionExclude.value = "exclude";
-      optionExclude.textContent = "Exclude";
-
-      select.appendChild(optionAdd);
-      select.appendChild(optionInclude);
-      select.appendChild(optionExclude);
-
-      conditionSelects.push(select);
-    }
-
-    const nestedCheckbox = document.createElement("input");
-    nestedCheckbox.type = "checkbox";
-    nestedCheckbox.name = "nestedCheckbox";
-    const nestedLabel = document.createElement("label");
-    nestedLabel.classList.add("fs-6");
-    nestedLabel.textContent = " Nested";
-
-    conditionDiv.appendChild(conditionSelects[0]);
-    conditionDiv.appendChild(conditionSelects[1]);
-    conditionDiv.appendChild(conditionSelects[2]);
-    conditionDiv.appendChild(nestedCheckbox);
-    conditionDiv.appendChild(nestedLabel);
-
-    const buttonsDiv = document.createElement("div");
-    buttonsDiv.classList.add("d-flex", "gap-2");
-
-    const addConditionBtn = document.createElement("button");
-    addConditionBtn.id = "add-condition-btn";
-    addConditionBtn.innerHTML =
-      '<i class="fa-solid fa-plus"></i> Add Condition';
-    addConditionBtn.addEventListener("click", (event) => addCondition(event));
-
-    const addRuleBtn = document.createElement("button");
-    addRuleBtn.id = "add-rule-btn";
-    addRuleBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Rule';
-    addRuleBtn.addEventListener("click", (event) => addRule(event));
-
-    buttonsDiv.appendChild(addConditionBtn);
-    buttonsDiv.appendChild(addRuleBtn);
-
-    newRuleDiv.appendChild(conditionDiv);
-    newRuleDiv.appendChild(buttonsDiv);
-
-    ruleBoxContainer.appendChild(newRuleDiv);
-  }
+function createGroupDiv() {
+  const groupDiv = document.createElement("div");
+  groupDiv.classList.add("group");
 
   const outerContainer = document.createElement("div");
   outerContainer.classList.add(
@@ -138,59 +22,220 @@ document.addEventListener("DOMContentLoaded", function () {
     "border-m"
   );
 
+  const groupTitleInput = document.getElementById("group-title-input");
   const groupTitle = document.createElement("span");
-  groupTitle.textContent = "Group 1";
+  groupTitle.textContent = `Group ${groupCounter}`;
   groupTitle.classList.add("text-purple", "fw-bold");
 
-  const trashIcon = document.createElement("i");
-  trashIcon.classList.add("fa-solid", "fa-trash", "text-purple");
-  trashIcon.addEventListener("click", () => {
-    outerContainer.remove();
+  groupCounter++; // Increment the counter for the next group
+
+  const trashIcon = createDeleteIcon(() => {
+    groupMainContainer.removeChild(groupDiv);
+    groupCounter--;
   });
 
   headerDiv.appendChild(groupTitle);
   headerDiv.appendChild(trashIcon);
 
   innerGroup.appendChild(headerDiv);
+  outerContainer.appendChild(innerGroup);
 
-  const ruleBoxContainer = document.createElement("div");
-  ruleBoxContainer.classList.add(
+  const createRuleDiv = addRule(innerGroup);
+  innerGroup.appendChild(createRuleDiv);
+
+  const createConditionDiv = createCondition(createRuleDiv);
+  createRuleDiv.appendChild(createConditionDiv);
+
+  groupDiv.appendChild(outerContainer);
+  groupMainContainer.appendChild(groupDiv);
+}
+
+function createButton(text, onClick) {
+  const button = document.createElement("button");
+  button.setAttribute("type", "button");
+  button.textContent = text;
+  button.addEventListener("click", onClick);
+  return button;
+}
+
+function createDeleteIcon(onClick) {
+  const deleteIcon = document.createElement("i");
+  deleteIcon.classList.add("fa-solid", "fa-trash", "text-purple");
+  deleteIcon.addEventListener("click", onClick);
+  return deleteIcon;
+}
+
+function addRule(ruleDiv) {
+  const ruleBox = document.createElement("div");
+  ruleBox.classList.add("rule-box");
+
+  const ruleHeadingDiv = document.createElement("div");
+  ruleHeadingDiv.classList.add("rule-heading");
+
+  const trashIcon = createDeleteIcon(() => ruleDiv.removeChild(ruleBox));
+
+  // const conditionsPlaceholder = document.createElement("div");
+  // conditionsPlaceholder.classList.add("conditions-placeholder");
+
+  const addRuleDiv = document.createElement("div");
+  addRuleDiv.classList.add(
     "px-4",
     "py-4",
     "background",
     "overflow-hidden",
     "rounded-3"
   );
+  addRuleDiv.id = "addRule";
 
-  const ruleDiv = document.createElement("div");
-  ruleDiv.classList.add(
+  const firstInnerDiv = document.createElement("div");
+  firstInnerDiv.classList.add(
     "d-flex",
     "justify-content-between",
     "p-2",
     "border-m",
     "rule",
-    "bg-light"
+    "bg-light",
+    "align-items-center"
   );
 
-  const addConditionBtn = document.createElement("button");
-  addConditionBtn.id = "add-condition-btn";
-  addConditionBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Condition';
-  addConditionBtn.addEventListener("click", (event) => addCondition(event));
+  const secondInnerDiv = document.createElement("div");
+  secondInnerDiv.classList.add(
+    "d-flex",
+    "justify-content-between",
+    "align-items-center",
+    "p-2",
+    "gap-2"
+  );
 
-  const addRuleBtn = document.createElement("button");
-  addRuleBtn.id = "add-rule-btn";
-  addRuleBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Rule';
-  addRuleBtn.addEventListener("click", (event) => addRule(event));
+  const firstDivInFirstInnerDiv = document.createElement("div");
+  firstDivInFirstInnerDiv.classList.add("py-2", "d-flex");
 
-  ruleDiv.appendChild(addConditionBtn);
-  ruleDiv.appendChild(addRuleBtn);
+  const selectElement = document.createElement("select");
+  selectElement.classList.add("selectpicker");
+  firstDivInFirstInnerDiv.appendChild(selectElement);
 
-  ruleBoxContainer.appendChild(ruleDiv);
+  const options = ["ADD", "Include", "Exclude"];
+  options.forEach((optionText) => {
+    const option = document.createElement("option");
+    option.value = optionText;
+    option.textContent = optionText;
+    selectElement.appendChild(option);
+  });
 
-  innerGroup.appendChild(ruleBoxContainer);
+  const checkboxDiv = document.createElement("div");
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  const label = document.createElement("label");
+  label.classList.add("fs-6");
+  label.textContent = " Nested";
+  checkboxDiv.appendChild(checkbox);
+  checkboxDiv.appendChild(label);
+  firstDivInFirstInnerDiv.appendChild(checkboxDiv);
 
-  outerContainer.appendChild(innerGroup);
+  const secondDivInFirstInnerDiv = document.createElement("div");
+  secondDivInFirstInnerDiv.classList.add("d-flex", "gap-2");
 
-  const targetElement = document.getElementById("addGroup");
-  targetElement.appendChild(outerContainer);
+  //   const addConditionButton = document.createElement("button");
+  //   addConditionButton.classList.add("add-condition-btn");
+  //   addConditionButton.innerHTML =
+  //     '<i class="fa-solid fa-plus"></i> Add Condition';
+
+  const addRuleButton = createButton("Add Rule", () => addRule(ruleBox));
+  const addConditionButton = createButton("Add Condition", () =>
+    createCondition(ruleBox)
+  );
+
+  //   addRuleButton.addEventListener("click", () => addRule(ruleBox));
+  //   addConditionButton.addEventListener("click", (e) => {
+  //     e.preventDefault();
+  //     createCondition(ruleBox);
+  //   });
+
+  firstInnerDiv.appendChild(firstDivInFirstInnerDiv);
+  firstInnerDiv.appendChild(secondDivInFirstInnerDiv);
+  addRuleDiv.appendChild(firstInnerDiv);
+
+  const addConditionDiv = document.createElement("div");
+  addConditionDiv.id = "addCondition";
+
+  const innerDivInConditionDiv = document.createElement("div");
+  innerDivInConditionDiv.classList.add(
+    "d-flex",
+    "justify-content-between",
+    "align-items-center"
+  );
+
+  for (let i = 0; i < 3; i++) {
+    const selectElement = document.createElement("select");
+    selectElement.classList.add("selectpicker");
+
+    options.forEach((optionText) => {
+      const option = document.createElement("option");
+      option.value = optionText;
+      option.textContent = optionText;
+      selectElement.appendChild(option);
+    });
+
+    innerDivInConditionDiv.appendChild(selectElement);
+  }
+
+  const deleteIcon = createDeleteIcon(() =>
+    addConditionDiv.removeChild(conditionDiv)
+  );
+  innerDivInConditionDiv.appendChild(deleteIcon);
+
+  addConditionDiv.appendChild(innerDivInConditionDiv);
+
+  addRuleDiv.appendChild(addConditionDiv);
+
+  ruleBox.appendChild(firstInnerDiv);
+  firstInnerDiv.appendChild(secondInnerDiv);
+  secondInnerDiv.appendChild(addRuleButton);
+  secondInnerDiv.appendChild(addConditionButton);
+  secondInnerDiv.appendChild(trashIcon);
+  // ruleBox.appendChild(conditionsPlaceholder);
+
+  ruleDiv.appendChild(ruleBox);
+
+  return ruleBox;
+}
+
+function createCondition(ruleBox) {
+  const conditionDiv = document.createElement("div");
+  conditionDiv.classList.add(
+    "d-flex",
+    "justify-content-between",
+    "align-items-center",
+    "px-2"
+  );
+
+  const selectContainer = document.createElement("div");
+  selectContainer.classList.add("py-3", "d-flex", "gap-3");
+
+  for (let i = 0; i < 3; i++) {
+    const select = document.createElement("select");
+    select.classList.add("selectpicker");
+    const options = ["ADD", "Include", "Exclude"];
+    options.forEach((optionText) => {
+      const option = document.createElement("option");
+      option.value = optionText;
+      option.textContent = optionText;
+      select.appendChild(option);
+    });
+    selectContainer.appendChild(select);
+  }
+
+  const deleteIcon = createDeleteIcon(() => ruleBox.removeChild(conditionDiv));
+  conditionDiv.appendChild(selectContainer);
+  conditionDiv.appendChild(deleteIcon);
+  //   conditionsDiv.appendChild(conditionDiv);
+  return conditionDiv;
+}
+
+const groupMainContainer = document.getElementById("group-container");
+const addGroupButton = document.getElementById("add-group-btn");
+let groupCounter = 1;
+
+addGroupButton.addEventListener("click", () => {
+  createGroupDiv();
 });

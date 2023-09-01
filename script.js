@@ -486,14 +486,6 @@ function addRule(ruleDiv) {
   ruleDiv.appendChild(ruleBox);
 }
 
-function addCondition(ruleDiv) {
-  const conditionDiv = document.createElement("div");
-  conditionDiv.classList.add("condition");
-  conditionDiv.textContent = "Condition Text";
-
-  ruleDiv.querySelector(".conditions-placeholder").appendChild(conditionDiv);
-}
-
 function createButton(text, onClick) {
   const button = document.createElement("button");
   button.setAttribute("type", "button");
@@ -540,3 +532,8 @@ addGroupButton.addEventListener("click", () => {
   ruleDivv.appendChild(rule);
   console.log(groupDiv);
 });
+
+// Example usage
+const addConditionDiv = document.getElementById("addCondition");
+const newCondition = createCondition();
+addConditionDiv.appendChild(newCondition);

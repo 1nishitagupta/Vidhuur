@@ -172,7 +172,7 @@ function addRule(ruleDiv) {
   secondDivInFirstInnerDiv.appendChild(addRuleButton);
 
   addRuleButton.addEventListener("click", () => addRule(ruleBox));
-  addConditionButton.addEventListener("click", () => addCondition(ruleBox));
+  addConditionButton.addEventListener("click", () => createCondition(ruleBox));
 
   // Append all the created elements to their respective parent elements
   firstInnerDiv.appendChild(firstDivInFirstInnerDiv);
@@ -228,4 +228,43 @@ function addRule(ruleDiv) {
   ruleBox.appendChild(conditionsPlaceholder);
 
   ruleDiv.appendChild(ruleBox);
+
+  const createConditionDiv = createCondition(ruleBox);
+  ruleBox.appendChild(createConditionDiv);
+}
+
+function createCondition(ruleDiv) {
+  const conditionDiv = document.createElement("div");
+  conditionDiv.classList.add(
+    "d-flex",
+    "justify-content-between",
+    "align-items-center",
+    "px-2"
+  );
+
+  const selectContainer = document.createElement("div");
+  selectContainer.classList.add("py-3", "d-flex", "gap-3");
+
+  for (let i = 0; i < 3; i++) {
+    const select = document.createElement("select");
+    select.classList.add("selectpicker");
+    const options = ["ADD", "Include", "Exclude"];
+    options.forEach((optionText) => {
+      const option = document.createElement("option");
+      option.value = optionText;
+      option.textContent = optionText;
+      select.appendChild(option);
+    });
+    selectContainer.appendChild(select);
+  }
+
+  const deleteIcon = document.createElement("i");
+  deleteIcon.classList.add("fa-solid", "fa-trash", "text-purple");
+
+  conditionDiv.appendChild(selectContainer);
+  conditionDiv.appendChild(deleteIcon);
+
+  // ruleDiv.querySelector(".conditions-placeholder").appendChild(conditionDiv);
+
+  return conditionDiv;
 }
