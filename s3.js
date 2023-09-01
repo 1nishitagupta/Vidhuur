@@ -268,45 +268,48 @@ function addRule(ruleDiv) {
 
   ruleDiv.appendChild(ruleBox);
 
+  // const createCondition = createCondition(ruleBox);
+  // ruleBox.appendChild(createCondition);
+
   return ruleBox;
 }
 
-// function createCondition(ruleBox) {
-//   const conditionDiv = document.createElement("div");
-//   conditionDiv.classList.add(
-//     "d-flex",
-//     "justify-content-between",
-//     "align-items-center",
-//     "px-2"
-//   );
+function createCondition(ruleBox) {
+  const conditionDiv = document.createElement("div");
+  conditionDiv.classList.add(
+    "d-flex",
+    "justify-content-between",
+    "align-items-center",
+    "px-2"
+  );
 
-//   const selectContainer = document.createElement("div");
-//   selectContainer.classList.add("py-3", "d-flex", "gap-3");
+  const selectContainer = document.createElement("div");
+  selectContainer.classList.add("py-3", "d-flex", "gap-3");
 
-//   for (let i = 0; i < 3; i++) {
-//     const select = document.createElement("select");
-//     select.classList.add("selectpicker");
-//     const options = ["ADD", "Include", "Exclude"];
-//     options.forEach((optionText) => {
-//       const option = document.createElement("option");
-//       option.value = optionText;
-//       option.textContent = optionText;
-//       select.appendChild(option);
-//     });
-//     selectContainer.appendChild(select);
-//   }
+  for (let i = 0; i < 3; i++) {
+    const select = document.createElement("select");
+    select.classList.add("selectpicker");
+    const options = ["ADD", "Include", "Exclude"];
+    options.forEach((optionText) => {
+      const option = document.createElement("option");
+      option.value = optionText;
+      option.textContent = optionText;
+      select.appendChild(option);
+    });
+    selectContainer.appendChild(select);
+  }
 
-//   const deleteIcon = createDeleteIcon(() => {
-//     ruleBox.removeChild(conditionDiv);
-//   });
-//   conditionDiv.appendChild(selectContainer);
-//   conditionDiv.appendChild(deleteIcon);
+  const deleteIcon = createDeleteIcon(() => {
+    ruleBox.removeChild(conditionDiv);
+  });
+  conditionDiv.appendChild(selectContainer);
+  conditionDiv.appendChild(deleteIcon);
 
-//   // Append the conditionDiv to the ruleBox
-//   ruleBox.appendChild(conditionDiv);
+  // Append the conditionDiv to the ruleBox
+  ruleBox.appendChild(conditionDiv);
 
-//   return conditionDiv;
-// }
+  return conditionDiv;
+}
 
 function createButton(text, onClick) {
   const button = document.createElement("button");
@@ -331,22 +334,43 @@ function mapArrayToConditions(array, ruleBox) {
       "justify-content-between",
       "align-items-center",
       "px-2"
-      // "flex-column"
     );
 
     const selectContainer = document.createElement("div");
     selectContainer.classList.add("py-3", "d-flex", "gap-3");
 
-    // Create and populate the first select for ID
-    const idSelect = document.createElement("select");
-    idSelect.classList.add("selectpicker");
-    for (const option of Object.keys(condition.values || {})) {
-      const optionElement = document.createElement("option");
-      optionElement.value = option;
-      optionElement.textContent = condition.values[option];
-      idSelect.appendChild(optionElement);
+    // Check if the type is "string" and create an input box with type "text"
+    if (condition.type === "string") {
+      const inputBox = document.createElement("input");
+      inputBox.type = "text";
+      inputBox.classList.add("form-control", "input-same-size");
+      selectContainer.appendChild(inputBox);
     }
-    selectContainer.appendChild(idSelect);
+    // Check if the type is "number" and create an input box with type "number"
+    else if (condition.type === "number") {
+      const inputBox = document.createElement("input");
+      inputBox.type = "number";
+      inputBox.classList.add("form-control", "input-same-size");
+      selectContainer.appendChild(inputBox);
+    }
+    // Check if the type is "date" and create an input box with type "date"
+    else if (condition.type === "date") {
+      const inputBox = document.createElement("input");
+      inputBox.type = "date";
+      inputBox.classList.add("form-control", "input-same-size");
+      selectContainer.appendChild(inputBox);
+    } else {
+      // Create and populate the first select for ID
+      const idSelect = document.createElement("select");
+      idSelect.classList.add("selectpicker");
+      for (const option of Object.keys(condition.values || {})) {
+        const optionElement = document.createElement("option");
+        optionElement.value = option;
+        optionElement.textContent = condition.values[option];
+        idSelect.appendChild(optionElement);
+      }
+      selectContainer.appendChild(idSelect);
+    }
 
     // Create and populate the second select for operators
     const operatorsSelect = document.createElement("select");
